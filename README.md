@@ -65,3 +65,13 @@ docker build -t news-classifier:latest .
 docker run -p 8000:8000 news-classifier:latest
 ```
 
+## Run with Railway
+
+- Url: https://news-classifier-api-production.up.railway.app/
+
+```bash
+curl https://news-classifier-api-production.up.railway.app/health
+curl -X POST https://news-classifier-api-production.up.railway.app/predict \
+  -H 'Content-Type: application/json' \
+  -d '{"text": "Your Sample Text"}'
+```
