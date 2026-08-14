@@ -1,14 +1,41 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
+import time
+import logging
 from pydantic import BaseModel, field_validator
 
 from app.model import get_model, predict
 
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s | %(levelname)s | %(message)s"
+)
+
+logger = logging.getLogger(__name__)
 
 app = FastAPI(
     title="News Category Classifier",
     description="Classifies news text into World, Sports, Business, or Technology.",
     version="1.0.0",
 )
+
+@app.middleware("http")
+async def log_requests(request: Request, call_next):
+    start_time = time.time()
+
+    response = await call_next(request)
+
+    duration = time.time() - start_time
+
+    logger.info(
+        "%s %s -> %s %.3fs",
+        request.method,
+        request.url.path,
+        response.status_code,
+        duration,
+    )
+
+    return response
 
 
 class PredictRequest(BaseModel):
