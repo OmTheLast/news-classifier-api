@@ -1,7 +1,12 @@
-from fastapi import FastAPI, HTTPException, Request
 import time
 import logging
+
+from fastapi import FastAPI, HTTPException, Request
 from pydantic import BaseModel, field_validator
+
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
+from slowapi.util import get_remote_address
 
 from app.model import get_model, predict
 
@@ -18,6 +23,10 @@ app = FastAPI(
     description="Classifies news text into World, Sports, Business, or Technology.",
     version="1.0.0",
 )
+
+limiter = Limiter(key_func=get_remote_address)
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 @app.middleware("http")
 async def log_requests(request: Request, call_next):
@@ -74,7 +83,8 @@ async def startup_event():
 
 
 @app.get("/health", response_model=HealthResponse)
-def health():
+@limiter.limit("60/minute")
+def health(request: Request):
     """
     Health check endpoint.
 
@@ -93,8 +103,11 @@ def health():
     )
 
 
+
+
 @app.post("/predict", response_model=PredictResponse)
-def predict_endpoint(request: PredictRequest):
+@limiter.limit("30/minute")
+def predict_endpoint(request: Request, payload: PredictRequest):
     """
     Classify news text into one of four categories.
 
@@ -108,7 +121,7 @@ def predict_endpoint(request: PredictRequest):
     - probabilities for all four classes
     """
     try:
-        result = predict(request.text)
+        result = predict(payload.text)
         return PredictResponse(**result)
     except Exception as exc:
         raise HTTPException(status_code=500, detail=str(exc)) from exc
