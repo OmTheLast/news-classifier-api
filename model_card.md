@@ -4,6 +4,16 @@
 
 TF-IDF vectorizer with 50,000 maximum features, unigrams and bigrams, and Logistic Regression. The model classifies English news text into four categories: World, Sports, Business, and Technology.
 
+## Deployment
+
+This model is served through a FastAPI application and deployed on Railway.
+
+Live API:
+
+```text
+https://news-classifier-api-production.up.railway.app
+```
+
 ## Intended Use
 
 - Educational demonstration of model serving
@@ -22,13 +32,22 @@ AG News training split from Project 2. The original 120,000 training examples we
 
 ## Evaluation Results
 
-From Project 2:
+From TARQ Project 2:
 
-- Validation accuracy: 92.17%
-- Test accuracy: 91.78%
-- Strongest class: Sports
-- Weakest class: Business
-- Main confusion pair: Business and Technology
+| Class | Precision | Recall | F1 |
+|---|---:|---:|---:|
+| World | 0.93 | 0.91 | 0.92 |
+| Sports | 0.95 | 0.98 | 0.97 |
+| Business | 0.89 | 0.88 | 0.89 |
+| Technology | 0.89 | 0.90 | 0.90 |
+
+Overall:
+
+| Split | Accuracy |
+|---|---:|
+| Validation | 92.17% |
+| Test | 91.78% |
+
 
 ## Known Limitations
 
@@ -53,5 +72,4 @@ Request body:
 
 ## Security Note
 
-This API has no authentication or rate limiting by default. It is acceptable for a low-risk educational demo, but a real public production API should add API keys, rate limiting, logging, and monitoring.
-
+This API has basic rate limiting but no authentication. It is acceptable for a low-risk educational demo, but a real public production API should add API keys or OAuth, stronger rate limits, structured logging, and monitoring.

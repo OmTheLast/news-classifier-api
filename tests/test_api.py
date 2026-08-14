@@ -13,8 +13,9 @@ class TestHealth:
 
     def test_model_ready(self):
         data = client.get("/health").json()
-        assert data["model_ready"] is True
         assert data["status"] == "ok"
+        assert data["model_ready"] is True
+        assert data["version"] == "1.0.0"
 
 
 class TestPredictHappyPath:
@@ -31,6 +32,8 @@ class TestPredictHappyPath:
             "text": "Apple unveils new MacBook Pro with M4 chip"
         })
         assert response.status_code == 200
+        # From Project 2, we know Business and Technology are often confused.
+        # So this test accepts either label instead of being too strict.
         assert response.json()["label"] in ["Technology", "Business"]
 
     def test_probabilities_sum_to_one(self):
@@ -38,6 +41,7 @@ class TestPredictHappyPath:
             "text": "Government announces new trade deal with the EU"
         })
         total = sum(response.json()["probabilities"].values())
+        assert response.status_code == 200
         assert abs(total - 1.0) < 1e-4
 
     def test_response_schema(self):
@@ -45,6 +49,7 @@ class TestPredictHappyPath:
             "text": "Stock markets fall amid rising inflation concerns"
         })
         data = response.json()
+        assert response.status_code == 200
         for field in ["label", "label_id", "confidence", "probabilities"]:
             assert field in data
         assert 0 <= data["label_id"] <= 3

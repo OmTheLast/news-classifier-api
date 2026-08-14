@@ -5,4 +5,7 @@ __pycache__/
 .pytest_cache/
 .DS_Store
 260327 - project3_api.docx.pdf
+*.md
+tests/
+
 

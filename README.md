@@ -275,6 +275,21 @@ Live URL:
 https://news-classifier-api-production.up.railway.app
 ```
 
+## Rate Limiting
+
+The API uses SlowAPI for basic rate limiting.
+
+Current limits:
+
+- `/health`: 60 requests per minute per client
+- `/predict`: 30 requests per minute per client
+
+If a client exceeds the limit, the API returns:
+
+```text
+429 Too Many Requests
+```
+
 ## Known Limitations
 
 - The model was trained on AG News, so it is designed for English news classification only.
@@ -283,7 +298,7 @@ https://news-classifier-api-production.up.railway.app
 - World and Business can overlap on oil, trade, government, markets, and economic topics.
 - Some AG News labels may be ambiguous or noisy.
 - TF-IDF + Logistic Regression relies on word and phrase patterns rather than deep contextual understanding.
-- The API currently has no authentication or rate limiting.
+- The API has basic rate limiting, but no authentication.
 
 ## What I Learned
 
