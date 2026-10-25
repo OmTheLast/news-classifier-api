@@ -1,8 +1,10 @@
 <h1 align="center">News Classifier API</h1>
 
+[Portfolio case study](https://ompatnaik.com/projects/news-classifier/)
+
 **Send English news text to an API and receive one of four AG News categories with class probabilities.**
 
-[Demo or published artifacts](https://news-classifier-api-production.up.railway.app/docs)
+The former hosted API is currently unavailable (HTTP 404 checked October 2026). Use the local setup below.
 
 Python 3.11. FastAPI server with a saved TF-IDF model. Public API has rate limits and no authentication.
 
